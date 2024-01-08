@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import BatteryChargLevel from "./batteryChargLevel";
 import MidButton from "./midButton";
@@ -23,9 +23,9 @@ function Dashboard({ navigation }) {
           name="Home"
           options={{
             headerLeft: () => (
-              <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()} >
                 <Entypo name="menu" size={34} color="black" />
-              </View>
+              </Pressable>
             ),
             headerRight: () => (
               <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
@@ -62,9 +62,9 @@ function Dashboard({ navigation }) {
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="setting" size={24} color={color} />
             ),headerLeft: () => (
-              <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
                 <Entypo name="menu" size={34} color="black" />
-              </View>
+              </Pressable>
             ),
             headerRight: () => (
               <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
@@ -80,9 +80,9 @@ function Dashboard({ navigation }) {
             tabBarIcon: ({ color, size }) => (
               <FontAwesome name="user" size={size} color={color}   />
             ),headerLeft: () => (
-              <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
                 <Entypo name="menu" size={34} color="black" />
-              </View>
+              </Pressable>
             ),
             headerRight: () => (
               <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
@@ -96,6 +96,7 @@ function Dashboard({ navigation }) {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

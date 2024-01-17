@@ -21,6 +21,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import styles from "./styles";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../../config/firebase";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 const { height, width } = Dimensions.get("window");
 function Login({ navigation }) {
@@ -28,6 +31,12 @@ function Login({ navigation }) {
   const formButtonScale = useSharedValue(1);
   const formTyping = useSharedValue(1);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [fname, setFname] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const auth = FIREBASE_AUTH;
 
   const imageAnimatedStyle = useAnimatedStyle(() => {
     const interpolation = interpolate(
@@ -96,8 +105,72 @@ function Login({ navigation }) {
     }
   };
   const isLogin = () => {
-    navigation.push("Dashboard");
+    
   };
+
+  
+  const signIn = async () => {
+    setLoading(true)
+    console.log('====================================');
+    console.log(email, password);
+    console.log('====================================');
+    try {
+        const res = await signInWithEmailAndPassword(auth,email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user)
+            alert("User found")
+            setLoading(false)
+        })
+          alert("User found")
+          setLoading(false)
+          navigation.navigate("Dashboard")
+        
+    } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        alert("User not found")
+        setLoading(false)
+    }
+    finally{
+        setLoading(false)
+    }
+}
+
+const signUp = async () => {
+    setLoading(true)
+    try {
+        const res = await createUserWithEmailAndPassword(auth,email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user)
+            alert("User found")
+            
+            setDoc(doc(FIREBASE_DB, "users", userCredential.user.uid), {
+              fullName: fname
+            }).then(() => {
+              console.log("Document successfully written!");
+            });
+            setLoading(false)
+        })
+          setLoading(false)
+          navigation.navigate("Dashboard")
+        
+    } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        alert("User not found")
+        setLoading(false)
+    }
+    finally{
+        setLoading(false)
+    }
+}
+
   return (
     <Animated.View style={styles.container}>
       <Animated.View
@@ -138,18 +211,21 @@ function Login({ navigation }) {
             placeholderTextColor="black"
             style={styles.textInput}
             onTextInput={() => (formTyping.value = 1)}
+            onChangeText={(e)=> setEmail(e)}
           />
           {isRegistering && (
             <TextInput
               placeholder="Full Name"
               placeholderTextColor="black"
               style={styles.textInput}
+              onChangeText={(e)=> setFname(e)}
             />
           )}
           <TextInput
             placeholder="Password"
             placeholderTextColor="black"
             style={styles.textInput}
+            onChangeText={(e)=> setPassword(e)}
           />
           <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
             <Pressable
@@ -158,7 +234,7 @@ function Login({ navigation }) {
                   withSpring(1.5),
                   withSpring(1)
                 );
-                isRegistering? isLogin() :isLogin();
+                isRegistering? signUp() :signIn();
               }}
             >
               <Text style={styles.buttonText}>

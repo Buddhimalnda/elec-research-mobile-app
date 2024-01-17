@@ -1,17 +1,52 @@
 import { Button, Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Svg, { Image, ClipPath,  Ellipse} from "react-native-svg";
 import { _COLORS } from "../../../style";
+import { onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from "../../../config/firebase";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window");
 
 function Profile() {
+  const [user, setUser] = useState();
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    //get user from firebase
+    onAuthStateChanged(FIREBASE_AUTH, (snap) => {
+      setUser(snap);
+      console.log('====================================');
+      console.log("User: ", snap);
+      getUserData(snap?.uid);
+      console.log('====================================');
+    });
+  }, [FIREBASE_AUTH, getUserData]);
+  //get userdata from firebase
+  const getUserData =async (id) => {
+      const docRef = await doc(FIREBASE_DB, "users", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        setUserData(docSnap.data());
+        return docSnap.data();
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        return null;
+      }
+  }
+  const navigation = useNavigation();
+  const logout = () => {
+    FIREBASE_AUTH.signOut();
+    navigation.navigate("Login");
+  }
   return (
     <SafeAreaView style={{width: width}}>
       <View style={StyleSheet.absoluteFill}>
         <Svg>
           <Image
-            href={require("../../../assets/img2.jpg")}
+            href={require( "../../../assets/img2.jpg")}
             width={width}
             height={200}
             preserveAspectRatio="xMidYMid slice"
@@ -32,18 +67,18 @@ function Profile() {
         </Svg>
       </View>
       <View style={{marginTop: 20}}>
-        <Text style={{textAlign: "center", fontSize: 30}}>Nguyen Van A</Text>
+        <Text style={{textAlign: "center", fontSize: 30}}>{userData?.fullname}</Text>
         <Text style={{textAlign: "center", fontSize: 15}}>User</Text>
       </View>
       <View style={{marginTop: 20}}>
-        <Text style={{textAlign: "center", fontSize: 15}}>Phone: 0123456789</Text>
-        <Text style={{textAlign: "center", fontSize: 15}}>Email: buddhimalinda66@gmail.com </Text>
-        <Text style={{textAlign: "center", fontSize: 15}}>Address: 123, Nguyen Van Cu, Long Bien, Ha Noi</Text>
+        <Text style={{textAlign: "center", fontSize: 15}}>Phone: {userData?.phone}</Text>
+        <Text style={{textAlign: "center", fontSize: 15}}>Email: {user?.email} </Text>
+        <Text style={{textAlign: "center", fontSize: 15}}>Address: {userData?.address || "enter"}</Text>
       </View>
       <View style={styles.btnView}>
-        <Button title="Edit"  color={_COLORS.primary}  />
+        <Button title="Edit"  color={_COLORS.primary} onPress={()=> navigation.navigate("EditProfile")}  />
         <Button title="Share" color={_COLORS.blur} />
-        <Button title="Logout" color={_COLORS.danger} />
+        <Button title="Logout" color={_COLORS.danger} onPress={()=> FIREBASE_AUTH.signOut()} />
       </View>
     </SafeAreaView>
   );

@@ -3,17 +3,34 @@ import React, { useState } from 'react'
 import { _COLORS } from '../../../style'
 import ListItem from './listItem'
 import { SearchBar } from 'react-native-screens'
+import CheckBox from 'react-native-check-box'
 import { FontAwesome5 } from '@expo/vector-icons';
 function History() {
+    const [isFilter, setIsFilter] = useState(false)
   return (
     <View style={styles.container} >
         <View style={styles.titlebar}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: _COLORS.black}}>List Of Workout</Text>
-            <Button title="Filter" color={_COLORS.primary} />
+            <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', opacity: isFilter? 0: 1}}>
+                <Button title="Filter" color={_COLORS.primary} onPress={()=> setIsFilter(isFilter? false: true)}  />
+            </View>
         </View>
-        <View style={styles.searchbar}><FontAwesome5 name="search" size={24} color="black" />
-            <TextInput style={styles.searchbarText} placeholder="Search" />
+        {isFilter && (
+        <View style={styles.searchbar}>
+            <View style={{display: 'flex', alignItems: "center", flexDirection: "row"}}>
+                <FontAwesome5 name="search" size={24} color="black" />
+                <TextInput style={styles.searchbarText} placeholder="Search" />
+            </View>
+            <Text style={{fontSize: 16, fontWeight: 'bold', color: _COLORS.black, marginRight:5}} onPress={()=>setIsFilter(isFilter? false: true)}>X</Text>
+            {/* <View>
+            <CheckBox
+                style={{padding: 10, marginHorizontal: 20}}
+                
+                leftText={"Bottom Left Light"}
+            />
+            </View> */}
         </View>
+        )}
       <ScrollView style={styles.list}>
         <ListItem />
         <ListItem />
@@ -41,7 +58,6 @@ function History() {
 const styles = StyleSheet.create({
     
     container:{
-        flex: 1,
         backgroundColor: _COLORS.white,
         // display: 'flex',
         // flexDirection: 'column',
@@ -63,6 +79,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: _COLORS.light,
         borderRadius: 10,
         marginVertical: 3,
@@ -73,6 +90,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: _COLORS.black,
         marginLeft: 10,
+        width: "80%"
     }
 })
 

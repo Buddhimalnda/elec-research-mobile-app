@@ -45,7 +45,7 @@ function App() {
 const AppRaw = ({user}) => {
   return(
 <NavigationContainer>
-        <Stack.Navigator initialRouteName={ user? "Dashboard" :"Login"}>
+        <Stack.Navigator initialRouteName={ !user? "Dashboard" :"Login"}>
         {/* <Stack.Navigator initialRouteName={"EditProfile"}> */}
         <Stack.Screen name="Login" options={{
           header: () => null,

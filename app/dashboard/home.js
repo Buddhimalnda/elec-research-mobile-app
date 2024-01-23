@@ -5,8 +5,11 @@ import MidButton from './midButton'
 import FooterButton from './footerButton'
 import { _COLORS } from '../../style'
 import Workout from './workout'
+import { connect, useSelector  } from 'react-redux';
+const Home = ({auth}) => {
 
-const Home = () => {
+  const a = useSelector((state) => state.auth.user);
+  console.log(a);
   return (
     <ScrollView style={styles.container}>
       {/* battery charging level */}
@@ -22,7 +25,6 @@ const Home = () => {
 }
 
 export default Home
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

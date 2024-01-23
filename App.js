@@ -38,7 +38,9 @@ function App() {
 
   
   return (
+    <Provider store={store}>
       <AppRaw user={user} />
+    </Provider>
   );
 }
 

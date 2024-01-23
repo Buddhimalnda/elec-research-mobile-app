@@ -1,8 +1,64 @@
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Alert, Button, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { _COLORS } from '../../../style'
+import { useSelector, useDispatch } from 'react-redux'
+import { getTimeDuration } from '../../../lib/functions'
+import { startWorkout } from '../../../store/workout'
+import CustomPanel from './CustomPanel'
+import EditUserDetails from './editUserDetails'
 
 function Tracking() {
+  const workoutDetails = useSelector((state) => state?.workout)
+  const [duration, setDuration] = useState("00:00:00")
+  const dispatch = useDispatch()
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  console.log('====================================');
+  console.log(workoutDetails?.state);
+  console.log('====================================');
+  useEffect(() => {
+    if(workoutDetails?.state === "WAITING"){
+      alert("workout Not start. Please start workout?")
+    }
+  }, [workoutDetails])
+  
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeRemaining((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const [panelVisible, setPanelVisible] = useState(false);
+  const [submittedData, setSubmittedData] = useState('');
+
+  const handleOpenPanel = () => {
+    setPanelVisible(true);
+  };
+
+  const handleClosePanel = () => {
+    setPanelVisible(false);
+  };
+
+  const handleSubmitData = (data) => {
+    setSubmittedData(data);
+  };
+
+  
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -13,7 +69,7 @@ function Tracking() {
           <Text>Icon</Text>
         </View>
         <View style={styles.duration}>
-          <Text style={styles.durationText}>00:00:00 </Text>
+          <Text style={styles.durationText}>{formatTime(timeRemaining)}</Text>
         </View>
         <View style={styles.info}>
           <ScrollView>
@@ -36,10 +92,17 @@ function Tracking() {
                 <Text style={{fontSize: 14, color: _COLORS.black}}>Age: </Text>
                 <Text style={{fontSize: 14, color: _COLORS.black}}>Gender: </Text>
                 <Text style={{fontSize: 14, color: _COLORS.black}}>Body Composition: </Text>
-                <Text style={{fontSize: 14, color: _COLORS.black}}>Body Composition: </Text>
               </View>
               <View>
-                <Button title='edit' />
+                <View>
+                  <Button title="Edit" onPress={handleOpenPanel} />
+                  <CustomPanel
+                    isVisible={panelVisible}
+                    onClose={handleClosePanel}
+                    onSubmit={handleSubmitData}
+                    Rx={<EditUserDetails />}
+                  />
+                </View>
               </View>
             </View>
             

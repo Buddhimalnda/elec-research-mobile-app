@@ -18,22 +18,33 @@ import Tracking from "./tracking";
 import History from "./history";
 function Dashboard({ navigation }) {
   const Tab = createBottomTabNavigator();
+  const options = {
+    headerLeft: () => (
+      <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()} >
+        <Entypo name="menu" size={34} color="black" />
+      </Pressable>
+    ),
+    headerRight: () => (
+      <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+        <MaterialIcons name="bluetooth" size={24} color="black" />
+      </View>
+    ),
+  }
   return (
     <View style={styles.container}>
       <Tab.Navigator >
         <Tab.Screen
           name="Home"
-          options={{
-            headerLeft: () => (
-              <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()} >
-                <Entypo name="menu" size={34} color="black" />
-              </Pressable>
-            ),
-            headerRight: () => (
-              <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                <MaterialIcons name="bluetooth" size={24} color="black" />
-              </View>
-            ),
+          options={{headerLeft: () => (
+            <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
+              <Entypo name="menu" size={34} color="black" />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <MaterialIcons name="bluetooth" size={24} color="black" />
+            </View>
+          ),
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
             ),
@@ -42,7 +53,16 @@ function Dashboard({ navigation }) {
         />
          <Tab.Screen
           name="Tracking"
-          options={{
+          options={{headerLeft: () => (
+            <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
+              <Entypo name="menu" size={34} color="black" />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <MaterialIcons name="bluetooth" size={24} color="black" />
+            </View>
+          ),
             tabBarIcon: ({ color, size }) => (
               <Entypo name="map" size={size} color={color} />
             ),
@@ -51,7 +71,16 @@ function Dashboard({ navigation }) {
         />
         <Tab.Screen
           name="History"
-          options={{
+          options={{headerLeft: () => (
+            <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
+              <Entypo name="menu" size={34} color="black" />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <MaterialIcons name="bluetooth" size={24} color="black" />
+            </View>
+          ),
             tabBarIcon: ({ color, size }) => (
               <FontAwesome5 name="history" size={size} color={color} />
             ),
@@ -60,19 +89,19 @@ function Dashboard({ navigation }) {
         /> 
         <Tab.Screen
           name="Setting"
-          options={{
+          options={{headerLeft: () => (
+            <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
+              <Entypo name="menu" size={34} color="black" />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+              <MaterialIcons name="bluetooth" size={24} color="black" />
+            </View>
+          ),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="setting" size={24} color={color} />
-            ),headerLeft: () => (
-              <Pressable style={{ marginHorizontal: 10, marginVertical: 10 }} onPress={()=> navigation.toggleDrawer()}>
-                <Entypo name="menu" size={34} color="black" />
-              </Pressable>
-            ),
-            headerRight: () => (
-              <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                <MaterialIcons name="bluetooth" size={24} color="black" />
-              </View>
-            ),
+            )
           }}
           component={Setting}
         />

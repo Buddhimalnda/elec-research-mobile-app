@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
     sideBtn: {
         backgroundColor: _COLORS.primary,
         color: '#fff',
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderRadius: 50,
         margin: 10,
         display: 'flex',
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     midBtn: {   
         backgroundColor: _COLORS.primary,
         color: '#fff',
-        width: 220,
-        height: 220,
+        width: 180,
+        height: 180,
         borderRadius: 100,
         margin: 10,
         display: 'flex',

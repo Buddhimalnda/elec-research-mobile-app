@@ -1,21 +1,24 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from '@react-native-community/slider';
 import { _COLORS } from '../../style';
 import CheckBox from 'react-native-check-box'
 function ColorPicker() {
-  const [red, setRed] = React.useState(0)
-  const [green, setGreen] = React.useState(0)
-  const [blue, setBlue] = React.useState(0)
-
-  const [topLeftLight, setTopLeftLight] = React.useState(false)
-  const [topRightLight, setTopRightLight] = React.useState(false)
-  const [bottomLeftLight, setBottomLeftLight] = React.useState(false)
-  const [bottomRightLight, setBottomRightLight] = React.useState(false)
+  const [red, setRed] = useState(0)
+  const [green, setGreen] = useState(0)
+  const [blue, setBlue] = useState(0)
+  const [hex, setHex] = useState("#000000")
+  useEffect(() => {
+    setHex(rgbToHex(red, green, blue))
+  }, [red, green, blue, rgbToHex])
+  
   return (
     <View style={styles.container}>
       <View>
+        <View style={styles.titleView}>
         <Text style={styles.titleText}>Pick Your color</Text>
+        <Button title="Submit" color={_COLORS.primary} />
+        </View>
         <View style={styles.row}>
           <Text>R</Text>
           <Slider
@@ -24,7 +27,7 @@ function ColorPicker() {
             maximumValue={255}
             minimumTrackTintColor={_COLORS.red}
             maximumTrackTintColor="#000000"
-            onValueChange={(value) => setRed(value.toPrecision(3))}
+            onValueChange={(value) => setRed(Math.ceil(value.toPrecision(3)))}
           />
           <Text>{red}</Text>
         </View>
@@ -36,7 +39,7 @@ function ColorPicker() {
             maximumValue={255}
             minimumTrackTintColor={_COLORS.green}
             maximumTrackTintColor="#000000"
-            onValueChange={(value) => setGreen(value.toPrecision(3))}
+            onValueChange={(value) => setGreen(Math.ceil(value.toPrecision(3)))}
           />
           <Text>{green}</Text>
         </View>
@@ -48,53 +51,34 @@ function ColorPicker() {
             maximumValue={255}
             minimumTrackTintColor={_COLORS.blur}
             maximumTrackTintColor="#000000"
-            onValueChange={(value) => setBlue(value.toPrecision(3))}
+            onValueChange={(value) => setBlue(Math.ceil(value.toPrecision(3)))}
           />
           <Text>{blue}</Text>
         </View>
       </View>
       <View style={{display: "flex", justifyContent:"center", alignItems: "center"}}>
         <View style={{backgroundColor: `rgba(${red},${green},${blue},1)`, height: 50, width: 100, margin: 20}}></View>
+        <Text>{hex}</Text>
       </View>
-      <View>
-        <Text style={styles.titleText}>Pick Your color</Text>
-        <CheckBox
-            style={{padding: 10, marginHorizontal: 20}}
-            onClick={()=>{
-              setTopLeftLight(!topLeftLight)
-            }}
-            isChecked={topLeftLight}
-            leftText={"Top Left Light"}
-        />
-        <CheckBox
-            style={{padding: 10, marginHorizontal: 20}}
-            onClick={()=>{
-              setTopRightLight(!topRightLight)
-            }}
-            isChecked={topRightLight}
-            leftText={"Top Right Light"}
-        />
-        <CheckBox
-            style={{padding: 10, marginHorizontal: 20}}
-            onClick={()=>{
-              setBottomLeftLight(!bottomLeftLight)
-            }}
-            isChecked={bottomLeftLight}
-            leftText={"Bottom Left Light"}
-        />
-        <CheckBox
-            style={{padding: 10, marginHorizontal: 20}}
-            onClick={()=>{
-              setBottomRightLight(!bottomRightLight)
-            }}
-            isChecked={bottomRightLight}
-            leftText={"Bottom Right Light"}
-        />
-      </View>
-      <Button title="Submit" color={_COLORS.primary} />
+      
+      
 
     </View>
   )
+}
+const rgbToHex = (r, g, b)=> {
+  // Ensure RGB values are within the 0-255 range
+  r = Math.max(0, Math.min(255, r));
+  g = Math.max(0, Math.min(255, g));
+  b = Math.max(0, Math.min(255, b));
+
+  // Convert each component to a two-digit hexadecimal string
+  const redHex = r.toString(16).padStart(2, '0');
+  const greenHex = g.toString(16).padStart(2, '0');
+  const blueHex = b.toString(16).padStart(2, '0');
+
+  // Concatenate the strings and prepend a hash
+  return `#${redHex}${greenHex}${blueHex}`;
 }
 
 export default ColorPicker
@@ -105,9 +89,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   titleText: {
-    margin: 20,
     fontSize: 20,
     fontWeight: "bold",
+  },
+  titleView:{
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 20,
   },
   row: {
     display: "flex",

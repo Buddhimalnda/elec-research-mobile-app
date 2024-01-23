@@ -15,7 +15,7 @@ export const _COLORS = {
     warning: "#FFFF00",
     info: "#00FFFF",
     dark: "#141414",
-    light: "#F2F3F4",
+    light: "#fff",
     transparent: "rgba(0,0,0,0)",
     danger: "#FF0000",
     blur: "#00f",
